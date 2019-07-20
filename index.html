@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+      crossorigin="anonymous"
+    />
+    <title>Enodo-Skills-Assess</title>
+
+    <style>
+      #map {
+        height: 700px;
+        width: 60%;
+        margin: 3rem 10rem;
+        justify-content: center;
+      }
+      #search {
+        height: 3rem;
+        width: 40%;
+        margin: 3rem;
+        justify-content: center;
+      }
+    </style>
+  </head>
+  <body>
+    <input type="text" id="search" placeholder="    search by category here" />
+    <div id="map"></div>
+
+    <script>
+      function initMap() {
+        map = new google.maps.Map(document.getElementById("map"), {
+          zoom: 6,
+          center: new google.maps.LatLng(40.6331, -89.3985),
+          mapTypeId: "terrain"
+        });
+
+        map.data.loadGeoJson(
+          "Enodo_Skills_Assessment_Data_File_4-19-2019.geojson"
+        );
+        // var script = document.createElement("script");
+
+        // script.src = ".Enodo_Skills_Assessment_Data_File_4-19-2019.geojson";
+        // document.getElementsByTagName("head")[0].appendChild(script);
+
+        window.eqfeed_callback = function(results) {
+          for (var i = 0; i < results.features.length; i++) {
+            var coords = results.features[i].geometry.coordinates;
+            var latLng = new google.maps.LatLng(coords[1], coords[0]);
+            var marker = new google.maps.Marker({
+              position: latLng,
+              map: map
+            });
+          }
+        };
+
+        // var options = {
+        //   zoom: 8,
+        //   center: { lat: 40.6331, lng: -89.3985 }
+        // };
+        // var map = new google.maps.Map(document.getElementById("map"), options);
+      }
+    </script>
+    <script
+      async
+      defer
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAw0R0sbUrwXrSkFaUFuHQDzP9T5GQ-GX8&callback=initMap"
+      type="text/javascript"
+    ></script>
+  </body>
+</html>
