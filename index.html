@@ -10,61 +10,144 @@
       integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
       crossorigin="anonymous"
     />
+    <!-- <script src="/geojson.js"></script> -->
     <title>Enodo-Skills-Assess</title>
 
     <style>
-      #map {
+      #test-gmap {
         height: 700px;
         width: 60%;
-        margin: 3rem 10rem;
+        margin: 10rem;
         justify-content: center;
+        border: solid 1rem #8cc455;
+        display: inline-block;
+      }
+      #drop-down {
+        position: relative;
+        border: none;
+        font-size: 30px;
+        color: #a9a7a7;
+        left: -192px;
+        top: -15px;
+      }
+
+      .option {
+        float: right;
+        border: 0;
+        font-size: x-large;
       }
       #search {
-        height: 3rem;
-        width: 40%;
-        margin: 3rem;
-        justify-content: center;
+        float: right;
+        width: 52%;
+        height: 4rem;
+        margin: 0 8rem 2rem 0;
+        border-radius: 2rem;
+        border: solid 0.1rem gray;
+        padding: 1rem;
       }
     </style>
   </head>
   <body>
-    <input type="text" id="search" placeholder="    search by category here" />
-    <div id="map"></div>
+    <nav
+      class="navbar navbar-light"
+      style="background-color: white; height: 11rem; font-size: 2rem; color:gray;"
+    >
+      <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+        <li class="nav-item active">
+          <img src="./Images/FPO_LOGO.png" />
+        </li>
+        <form class="form-group">
+          <select class="form-control option" id="exampleFormControlSelect1">
+            <option>Property List </option>
+            <option>Property Address </option>
+            <option>Neighborhood </option>
+            <option>Location </option>
+          </select>
+        </form>
+        <span class="sr-only">(current)</span>
+      </ul>
+      <!-- Navbar content -->
 
+      <input type="search" name="search" id="search" />
+      <button class="btn" id="drop-down">
+        <i class="fas fa-chevron-down"></i>
+      </button>
+    </nav>
+
+    <hr />
+    <div class="search-container">
+      <span><label for="properties">Properties</label></span>
+      <span><input type="text" name="input1" id:properties/></span>
+    </div>
+    <div class="map-container" style="text-align: center;">
+      <div id="test-gmap"></div>
+    </div>
     <script>
       function initMap() {
-        map = new google.maps.Map(document.getElementById("map"), {
-          zoom: 6,
+        map = new google.maps.Map(document.getElementById("test-gmap"), {
+          zoom: 7,
           center: new google.maps.LatLng(40.6331, -89.3985),
           mapTypeId: "terrain"
         });
 
-        map.data.loadGeoJson(
-          "Enodo_Skills_Assessment_Data_File_4-19-2019.geojson"
-        );
-        // var script = document.createElement("script");
-
-        // script.src = ".Enodo_Skills_Assessment_Data_File_4-19-2019.geojson";
-        // document.getElementsByTagName("head")[0].appendChild(script);
-
-        window.eqfeed_callback = function(results) {
-          for (var i = 0; i < results.features.length; i++) {
-            var coords = results.features[i].geometry.coordinates;
-            var latLng = new google.maps.LatLng(coords[1], coords[0]);
-            var marker = new google.maps.Marker({
-              position: latLng,
-              map: map
-            });
-          }
-        };
-
-        // var options = {
-        //   zoom: 8,
-        //   center: { lat: 40.6331, lng: -89.3985 }
-        // };
-        // var map = new google.maps.Map(document.getElementById("map"), options);
+        var coordinates;
+        var script = document.createElement("script");
+        script.src = "geojson.js";
+        document.getElementsByTagName("head")[0].appendChild(script);
       }
+
+      window.geojson_callback = function(results) {
+        console.log(results.geometry.coordinates);
+        coordinates = results.geometry.coordinates;
+        var centerCoord = new google.maps.LatLng(
+          coordinates[0],
+          coordinates[1]
+        );
+        var mapCanvas = document.getElementById("test-gmap");
+        var mapOptions = { center: centerCoord, zoom: 8 };
+        var map = new google.maps.Map(mapCanvas, mapOptions);
+        var marker = new google.maps.Marker({ position: centerCoord });
+        marker.setMap(map);
+      };
+
+      //   var coordinates;
+      //   function initMap() {
+      //     map = new google.maps.Map(document.getElementById("test-gmap"), {
+      //       zoom: 7,
+      //       center: new google.maps.LatLng(40.6331, -89.3985),
+      //       mapTypeId: "terrain"
+      //     });
+
+      //     // map.data.addGeoJson("geojson");
+      //     // Create a <script> tag and set the USGS URL as the source.
+      //     var script = document.createElement("script");
+      //     script.src = "geojson.js";
+      //     document.getElementsByTagName("head")[0].appendChild(script);
+      //   }
+
+      //   // Loop through the results array and place a marker for each
+      //   // set of coordinates.
+      //   window.geojson_callback = function(results) {
+      //     for (var i = 0; i < results.features.length; i++) {
+      //       var coords = results.features[i].geometry.coordinates;
+      //       var latLng = new google.maps.LatLng(coords[1], coords[0]);
+      //       var marker = new google.maps.Marker({
+      //         position: latLng,
+      //         map: coordinates
+      //       });
+      //     }
+      //   };
+      // var options = {
+      //   zoom: 8,
+      //   center: { lat: 40.6331, lng: -89.3985 }
+      // };
+      // var map = new google.maps.Map(document.getElementById("map"), options);
     </script>
+    <script src="https://kit.fontawesome.com/7df0d358e9.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.8.0/jszip.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.8.0/xlsx.js"></script>
+
     <script
       async
       defer
