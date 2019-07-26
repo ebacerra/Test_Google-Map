@@ -83,6 +83,9 @@
       <div id="test-gmap"></div>
     </div>
     <script>
+      // had issues with this, I've never worked on a goggle map before but I was able to get my map to render.
+      // for some reason the geojson for all of the properties is not importing into the map :(
+      // Followed the documentations from  developers.googlemaps but no luck. My apologies, I failed myself :(
       function initMap() {
         map = new google.maps.Map(document.getElementById("test-gmap"), {
           zoom: 7,
